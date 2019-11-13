@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
-import { Col,
+import { Grid,
+         Col,
          Row,
          Form,
          Item,
@@ -11,6 +12,7 @@ import Items from './Items';
 
 const People = props => props.people.map(function(person){
   return (
+    <Grid>
     <Row>
       <Col>
       <Form>
@@ -27,6 +29,7 @@ const People = props => props.people.map(function(person){
       </Button>
       </Col>
     </Row>
+    </Grid>
   );
 });
 

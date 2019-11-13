@@ -43,7 +43,14 @@ export default class App extends Component {
   }
 
   changePersonText(value) {
-    console.log(value);
+    const peopleArray = this.state.people;
+    if (peopleArray.length > 0)
+    {
+      peopleArray[0].name = value;
+      this.setState({
+        people: peopleArray
+      });
+    }
 }
 
   render() {
@@ -59,9 +66,8 @@ export default class App extends Component {
         <Button rounded info onPress={this.newPerson}>
           <Text>New Person</Text>
         </Button>
-        <Grid>
         <People people={this.state.people} changePersonText={this.changePersonText} />
-        </Grid>
+        <Text>{this.state.people.length > 0 ? this.state.people[0].name : null}</Text>
       </Container>
     );
   }
