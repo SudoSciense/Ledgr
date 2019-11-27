@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, Text, View, ScrollView } from 'react-native';
 import { Container,
          Header,
          Left,
@@ -15,6 +15,8 @@ import { Container,
          Label,
          Button} from 'native-base';
 import People from './components/People';
+import Breakdown from './components/Breakdown';
+import Style from './style/Style';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -25,33 +27,74 @@ export default class App extends Component {
   constructor(props) {
       super(props);
       // change code below this line
+
+  initialPeopleArray = [];
+  initialPeopleArray.push({name: '', numItems: 1, items: [{cost: '', index: 0}], index: 0});
+  initialPeopleArray.push({name: '', numItems: 1, items: [{cost: '', index: 0}], index: 1});
+  
   this.state = {
-    numPeople: 0,
-    people: []
+    numPeople: 2,
+    people: initialPeopleArray,
+    absoluteTotal: 0,
   };
       // change code above this line
       this.newPerson = this.newPerson.bind(this);
+      this.newItem = this.newItem.bind(this);
+      this.removeItem = this.removeItem.bind(this);
       this.changePersonText = this.changePersonText.bind(this);
-    }
-    newPerson() {
+      this.changeItemText = this.changeItemText.bind(this);
+  }
+  newPerson() {
     const peopleArray = this.state.people;
-    peopleArray.push({name : '', items: [''], index: this.state.numPeople});
+    peopleArray.push({name: '', numItems: 1, items: [{cost: '', index: 0}], index: this.state.numPeople});
     this.setState({
       numPeople: this.state.numPeople + 1,
       people: peopleArray
     });
   }
 
-  changePersonText(value) {
+  newItem(personIndex) {
+    const peopleArray = this.state.people;
+    peopleArray[personIndex].items.push({cost: '', index: peopleArray[personIndex].numItems});
+    peopleArray[personIndex].numItems++;
+    this.setState({
+      people: peopleArray
+    });
+  }
+
+  removeItem(personIndex) {
+    const peopleArray = this.state.people;
+    peopleArray[personIndex].items.pop();
+    if (peopleArray[personIndex].numItems > 0)
+    {
+      peopleArray[personIndex].numItems--;
+    }
+    this.setState({
+      people: peopleArray
+    });
+  }
+
+  changePersonText(value, index) {
     const peopleArray = this.state.people;
     if (peopleArray.length > 0)
     {
-      peopleArray[0].name = value;
+      peopleArray[index].name = value;
       this.setState({
         people: peopleArray
       });
     }
-}
+  }
+
+  changeItemText(value, personIndex, itemIndex) {
+    const peopleArray = this.state.people;
+    if (peopleArray[personIndex].items.length > 0)
+    {
+      peopleArray[personIndex].items[itemIndex].cost = value;
+      this.setState({
+        people: peopleArray
+      });
+    }
+  }
 
   render() {
     return (
@@ -63,31 +106,28 @@ export default class App extends Component {
           </Body>
           <Right />
         </Header>
-        <Button rounded info onPress={this.newPerson}>
-          <Text>New Person</Text>
-        </Button>
-        <People people={this.state.people} changePersonText={this.changePersonText} />
-        <Text>{this.state.people.length > 0 ? this.state.people[0].name : null}</Text>
+        <ScrollView>
+          <View style={Style.container}>
+            <Button bordered info style={Style.button} onPress={this.newPerson}>
+              <Text>New Person</Text>
+            </Button>
+          </View>
+              <Form>
+                <Item floatingLabel>
+                <Label>Total to split</Label>
+                  <Input onChangeText={(value) => this.setState({absoluteTotal: parseFloat(value)})}/>
+                </Item>
+              </Form>
+          <People people={this.state.people}
+                  changePersonText={this.changePersonText}
+                  changeItemText={this.changeItemText}
+                  newItem={this.newItem}
+                  removeItem={this.removeItem}/>
+          <View style={Style.breakdownSection}>
+          <Breakdown state={this.state}/>
+          </View>
+        </ScrollView>
       </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});

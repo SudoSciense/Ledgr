@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { Grid,
          Col,
          Row,
@@ -9,27 +9,40 @@ import { Grid,
          Label,
          Button} from 'native-base';
 import Items from './Items';
+import Style from '../style/Style';
 
 const People = props => props.people.map(function(person){
   return (
-    <Grid>
     <Row>
       <Col>
-      <Form>
-        <Item floatingLabel>
-        <Label>Person</Label>
-          <Input onChangeText={(value) => props.changePersonText(value)}/>
-        </Item>
-      </Form>
+        <Form>
+          <Item floatingLabel>
+          <Label>Person</Label>
+            <Input onChangeText={(value) => props.changePersonText(value, person.index)}/>
+          </Item>
+        </Form>
       </Col>
       <Col>
-      <Items person={person}/>
-      <Button rounded info>
-        <Text>Info</Text>
-      </Button>
+        <Items person={person}
+               changeItemText={props.changeItemText}/>
+        <Row>
+          <View style={Style.container}>
+          <Col>
+            <Button bordered info style={Style.button} onPress={() => props.newItem(person.index)}>
+            <Text>+</Text>
+            </Button>
+          </Col>
+          </View>
+          <View style={Style.container}>
+          <Col>
+            <Button bordered danger style={Style.button} onPress={() => props.removeItem(person.index)}>
+            <Text>-</Text>
+            </Button>
+          </Col>
+        </View>
+      </Row>
       </Col>
     </Row>
-    </Grid>
   );
 });
 

@@ -10,7 +10,7 @@ const Items = props => props.person.items.map(function(item) {
     <Form>
       <Item floatingLabel>
         <Label>Item</Label>
-        <Input value={item}/>
+        <Input onChangeText={(value) => props.changeItemText(value, props.person.index, item.index)}/>
       </Item>
     </Form>
   );
