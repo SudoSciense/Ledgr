@@ -12,6 +12,14 @@
       "ios",
       "android",
       "web"
-    ]
+    ],
+    "android": {
+      "package": "com.sudosciense.ledgr",
+      "permissions": []
+    },
+    "ios": {
+      "bundleIdentifier": "com.sudosciense.ledgr",
+      "permissions": []
+    }
   }
 }
